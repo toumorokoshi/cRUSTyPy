@@ -1,0 +1,22 @@
+use super::{Statement, Module};
+
+pub symbol -> String = match_str:$([a-zA-Z][a-zA-Z0-9]*) s:symbol { result }
+
+pub module -> Module = sl:stmt_list { s }
+
+pub statement -> Statement =
+    s:symbol { Statement::Symbol(Box::new(s)); }
+
+pub statement_list -> Vec<Statement> =
+    s:statement spaces sl:statement_list {
+        let mut new_list = Vec::new();
+        new_list.push(s);
+        new_list.extend_from_slice(&sl);
+        new_list
+    }
+    / s:statement {
+        let mut new_list = Vec::new();
+        new_list.push(s);
+        new_list
+    }
+}
